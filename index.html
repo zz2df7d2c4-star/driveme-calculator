@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DriveMe — Калькулятор заробітку</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f2f4f8;
+padding:20px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+border-radius:18px;
+padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.logo{
+text-align:center;
+font-size:30px;
+font-weight:bold;
+color:#007BFF;
+margin-bottom:5px;
+}
+
+.subtitle{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:15px;
+margin-bottom:6px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:14px;
+font-size:17px;
+border:1px solid #ddd;
+border-radius:12px;
+outline:none;
+}
+
+input:focus{
+border-color:#007BFF;
+}
+
+button{
+margin-top:25px;
+width:100%;
+padding:16px;
+font-size:18px;
+font-weight:bold;
+background:#007BFF;
+color:white;
+border:none;
+border-radius:14px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0064d6;
+}
+
+.result{
+margin-top:25px;
+display:none;
+background:#f7f9fc;
+border-radius:15px;
+padding:18px;
+}
+
+.card{
+margin-top:12px;
+padding:12px;
+border-radius:10px;
+background:white;
+border-left:5px solid #007BFF;
+}
+
+.green{
+border-left-color:#00b35a;
+}
+
+.yellow{
+border-left-color:#ffb300;
+}
+
+.red{
+border-left-color:#e53935;
+}
+
+.big{
+font-size:26px;
+font-weight:bold;
+margin-top:5px;
+}
+
+small{
+color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+🚖 DriveMe
+</div>
+
+<div class="subtitle">
+Калькулятор заробітку водія
+</div>
+
+<label>Загальна каса (грн)</label>
+<input id="kasa" type="number">
+
+<label>Чайові та компенсації (грн)</label>
+<input id="tips" type="number" value="0">
+
+<label>Кількість робочих днів</label>
+<input id="days" type="number">
+
+<label>Готівка у водія (грн)</label>
+<input id="cash" type="number">
+
+<button onclick="calc()">
+Розрахувати
+</button>
+
+<div id="result" class="result">
+<div id="avgCard" class="card">
+<small>Середня каса за день</small>
+<div id="avg" class="big">0 грн</div>
+</div>
+
+<div id="percentCard" class="card">
+<small>Ваш відсоток</small>
+<div id="percent" class="big">55%</div>
+</div>
+
+<div id="balanceCard" class="card">
+<small>Результат</small>
+<div id="balance" class="big">0 грн</div>
+</div>
+
+<div id="hintCard" class="card">
+<small>Підказка</small>
+<div id="hint">
+Заповніть дані та натисніть «Розрахувати».
+</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function calc(){
+
+let kasa=Number(document.getElementById("
+let kasa=Number(document.getElementById("kasa").value);
+let tips=Number(document.getElementById("tips").value);
+let days=Number(document.getElementById("days").value);
+let cash=Number(document.getElementById("cash").value);
+
+if(days<=0){
+alert("Вкажіть кількість робочих днів.");
+return;
+}
+
+let clean=kasa-tips;
+let avg=clean/days;
+
+let percent=55;
+
+if(avg>=3300 && days>=3){
+percent=65;
+}else if(avg>=2900){
+percent=60;
+}else{
+percent=55;
+}
+
+let salary=clean*(percent/100);
+
+let balance=salary-cash;
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("avg").innerHTML=avg.toFixed(2)+" грн";
+document.getElementById("percent").innerHTML=percent+"%";
+
+let balanceText="";
+let hint="";
+
+let percentCard=document.getElementById("percentCard");
+
+percentCard.className="card";
+
+if(percent==65){
+percentCard.classList.add("green");
+}
+
+if(percent==60){
+percentCard.classList.add("yellow");
+hint="До 65% залишилось підняти середню касу на "+Math.max(0,(3300-avg)).toFixed(2)+" грн/день.";
+}
+
+if(percent==55){
+percentCard.classList.add("red");
+
+if(avg<2900){
+hint="До 60% залишилось підняти середню касу на "+(2900-avg).toFixed(2)+" грн/день.";
+}
+}
+if(balance>=0){
+
+document.getElementById("balanceCard").className="card green";
+
+balanceText="🟢 До виплати водію<br><span class='big'>"+balance.toFixed(2)+" грн</span>";
+
+}else{
+
+document.getElementById("balanceCard").className="card red";
+
+balanceText="🔴 Водій має здати<br><span class='big'>"+Math.abs(balance).toFixed(2)+" грн</span>";
+
+}
+
+document.getElementById("balance").innerHTML=balanceText;
+
+document.getElementById("hint").innerHTML=hint;
+
+}
+
+</script>
+
+</body>
+
+</html>
